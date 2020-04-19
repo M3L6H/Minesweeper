@@ -96,15 +96,16 @@ class Minesweeper
             # Get neighbors
             neighbors = self.neighbors([i, j])
 
-            # Count number of mines around current pos
-            count = self.count_mines(neighbors)
+            # Get the mines around the current pos
+            mines = self.get_mines(neighbors)
+            count = mines.size
 
             # Open current pos
             self[[i, j]] = count > 0 ? COLORS[count] : " "
             self.revealed += 1
 
             # Add neighbors to search
-            if count == 0
+            if mines.all? { |pos| self[pos] == "⚑" }
                 neighbors.each do |i_n, j_n|
                     if !self.mine?([i_n, j_n]) && !visited[i_n * self.width + j_n]
                         visited[i_n * self.width + j_n] = true
@@ -144,7 +145,7 @@ class Minesweeper
                 if self.mine?([i, j])
                     str += (@exploded_pos == [i, j] ? " ☢".red : " ☢")
                 else
-                    count = self.count_mines(self.neighbors([i, j]))
+                    count = self.get_mines(self.neighbors([i, j])).size
                     str += " " + (count > 0 ? COLORS[count] : " ")
                 end
                 # str += " " if (j + 1) % 5 == 0
@@ -212,12 +213,12 @@ class Minesweeper
             .select { |i, j| self.valid_coords(i, j) }
     end
 
-    # Counts the number of mines in the list of positions
+    # Selects the positions with mines out of the list of positions
     #
     # @param pos [Array<Array<Numeric>>] a list of positions to check
-    # @return [Numeric] the number of positions in the list which are mines
-    def count_mines(positions)
-        positions.count { |pos| self.mine?(pos) }
+    # @return [Array<Array<Numeric>>] the positions that contain mines
+    def get_mines(positions)
+        positions.select { |pos| self.mine?(pos) }
     end
 
     # Returns whether there is a mine at the given position

@@ -21,7 +21,9 @@ The first check will never hit a mine. After that, it is anybody's game.
 
 At any point, use the `flag <row> <col>` command to flag a tile. This prevents
 you from accidentally checking it, and if you successfully flag all the mines in
-the game, you will win.
+the game, you will win. Additionally, if you have successfully identified all
+the mines surrounding a tile, when you check that tile, it will reveal
+additional tiles.
 
 Alternatively, you can win by revealing all tiles that are not mines.
 
